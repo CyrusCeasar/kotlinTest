@@ -69,45 +69,40 @@ class SpeechSynthManager : SpeechSynthesizerListener {
         // 判断授权信息是否正确，如果正确则初始化语音合成器并开始语音合成，如果失败则做错误处理
         if (authInfo.isSuccess) {
             mSpeechSynthesizer.initTts(TtsMode.MIX)
-            mSpeechSynthesizer.speak("百度语音合成示例程序正在运行")
+            Logger.i("tts init success");
+            //mSpeechSynthesizer.speak("百度语音合成示例程序正在运行")
         } else {
             // 授权失败
+
         }
     }
 
     override fun onSynthesizeStart(p0: String?) {
         Logger.d(p0)
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onSpeechFinish(p0: String?) {
-        Logger.d(p0)
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  //      Logger.d(p0)
     }
 
     override fun onSpeechProgressChanged(p0: String?, p1: Int) {
-        Logger.d("$p0   $p1")
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+      //  Logger.d("$p0   $p1")
     }
 
     override fun onSynthesizeFinish(p0: String?) {
         Logger.d(p0)
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onSpeechStart(p0: String?) {
         Logger.d(p0)
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onSynthesizeDataArrived(p0: String?, p1: ByteArray?, p2: Int) {
-        Logger.d("$p0   $p1  $p2")
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+   //     Logger.d("$p0   $p1  $p2")
     }
 
     override fun onError(p0: String?, p1: SpeechError?) {
-        Logger.d("$p0  $p1")
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Logger.e("$p0  $p1")
     }
 
 }

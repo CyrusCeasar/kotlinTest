@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChatActivity"/>
-
+        <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" />
         <!-- begin: baidu speech sdk-->
         <!-- 请填写应用实际的APP_ID -->
         <meta-data android:name="com.baidu.speech.APP_ID" android:value="9688537"/>
