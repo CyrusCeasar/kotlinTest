@@ -13,8 +13,7 @@ class TestApplication : Application() {
     val TAG = TestApplication::class.simpleName
 
     object vals{
-        val speechSynthManager = SpeechSynthManager()
-        val wakeUpManager = WakeUpManager()
+        var robotCenter:RobotCenter ?= null
         val asrManager = AsrManager()
     }
 
@@ -47,9 +46,7 @@ class TestApplication : Application() {
 
         vals.asrManager.init(this@TestApplication)
         Thread({
-            vals.wakeUpManager.init(this@TestApplication)
-           if ( vals.speechSynthManager.check((this@TestApplication)))
-                vals.speechSynthManager.init(this@TestApplication)
+            vals.robotCenter = RobotCenter(this@TestApplication)
         }).start()
 
     }

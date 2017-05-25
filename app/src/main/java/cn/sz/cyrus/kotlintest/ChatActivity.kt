@@ -38,7 +38,6 @@ class ChatActivity : BaseActivity() {
             override fun onSuccess(p0: String?) {
                 p0?.let { contents.add(p0) }
                 rv_contents!!.adapter.notifyItemInserted(contents.size)
-                TestApplication.vals.speechSynthManager.speak(p0!!)
 
                 Logger.d(p0)
             }

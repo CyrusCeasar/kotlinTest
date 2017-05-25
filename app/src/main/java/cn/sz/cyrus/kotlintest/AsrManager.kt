@@ -36,7 +36,7 @@ class AsrManager : RecognitionListener {
         return true
     }
 
-    fun startASR(callback:((resultCode:Int,str:String)->Unit)) {
+    fun startASR(callback:((resultCode:Int,str:String)->Unit) ) {
         this.callback = callback
         val intent = Intent()
         bindParams(intent)

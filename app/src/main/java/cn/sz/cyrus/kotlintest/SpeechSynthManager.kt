@@ -20,7 +20,9 @@ class SpeechSynthManager : SpeechSynthesizerListener {
     val TXT_FILE_PATH = "${Environment.getExternalStorageDirectory().path}/zhiyou/bd_etts_text.dat"
 
     val SPEECH_FILE_PATH = "${Environment.getExternalStorageDirectory().path}/zhiyou/bd_etts_speech_female.dat"
-    fun speak(msg: String) {
+    var callback: (() -> Unit)? = null
+    fun speak(msg: String, onFinished: (() -> Unit)? = null) {
+        callback = onFinished
         mSpeechSynthesizer.speak(msg)
     }
 
@@ -82,15 +84,19 @@ class SpeechSynthManager : SpeechSynthesizerListener {
     }
 
     override fun onSpeechFinish(p0: String?) {
-  //      Logger.d(p0)
+
+        Logger.d(p0)
+        callback?.invoke()
     }
 
     override fun onSpeechProgressChanged(p0: String?, p1: Int) {
-      //  Logger.d("$p0   $p1")
+   //       Logger.d("$p0   $p1")
     }
 
     override fun onSynthesizeFinish(p0: String?) {
+
         Logger.d(p0)
+
     }
 
     override fun onSpeechStart(p0: String?) {
@@ -98,7 +104,7 @@ class SpeechSynthManager : SpeechSynthesizerListener {
     }
 
     override fun onSynthesizeDataArrived(p0: String?, p1: ByteArray?, p2: Int) {
-   //     Logger.d("$p0   $p1  $p2")
+        //     Logger.d("$p0   $p1  $p2")
     }
 
     override fun onError(p0: String?, p1: SpeechError?) {
