@@ -40,4 +40,5 @@ dependencies {
     releaseCompile 'com.letv.sarrsdesktop:BlockCanaryExJRTNoOp:0.9.8.2'
     testCompile 'com.letv.sarrsdesktop:BlockCanaryExJRTNoOp:0.9.8.2'*/
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'com.umeng.analytics:analytics:latest.integration'
 }
