@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.sz.cyrus.kotlintest">
+    package="cn.sz.cyrus.wemz">
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,13 +15,13 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:name=".TestApplication"
+        android:name="cn.sz.cyrus.wemz.TestApplication"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="cn.sz.cyrus.wemz.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ChatActivity"/>
+        <activity android:name="cn.sz.cyrus.wemz.ChatActivity"/>
         <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" />
         <!-- begin: baidu speech sdk-->
         <!-- 请填写应用实际的APP_ID -->
@@ -39,6 +39,9 @@
         <meta-data android:name="com.baidu.speech.API_KEY" android:value="veE64XDN8KYCW8OY0nUW0V4H"/>
         <!-- 请填写应用实际的SECRET_KEY -->
         <meta-data android:name="com.baidu.speech.SECRET_KEY" android:value="794f3ebb734216de3ed431e9b5d74d41"/>
+
+        <meta-data android:value="592792a1f29d983309002020" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="Channel ID" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

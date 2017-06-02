@@ -1,4 +1,4 @@
-package cn.sz.cyrus.kotlintest
+package cn.sz.cyrus.wemz
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -14,6 +14,8 @@ import com.orhanobut.logger.Logger
 import com.turing.androidsdk.HttpRequestListener
 import com.turing.androidsdk.TuringManager
 
+
+
 /**
  * Created by 41264 on 05/24/17.
  */
@@ -26,6 +28,8 @@ class ChatActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_chat)
+
+
         btn_send = findViewById(R.id.btn_send) as Button
         et_content = findViewById(R.id.et_content) as EditText
         rv_contents = findViewById(R.id.rv_contents) as RecyclerView

@@ -1,4 +1,4 @@
-package cn.sz.cyrus.kotlintest
+package cn.sz.cyrus.wemz
 
 import android.app.Application
 import com.orhanobut.logger.LogLevel

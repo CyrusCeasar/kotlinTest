@@ -1,4 +1,4 @@
-package cn.sz.cyrus.kotlintest
+package cn.sz.cyrus.wemz
 
 import android.widget.Toast
 import es.dmoral.toasty.Toasty

@@ -1,4 +1,4 @@
-package cn.sz.cyrus.kotlintest
+package cn.sz.cyrus.wemz
 
 import android.content.Intent
 import android.os.Bundle

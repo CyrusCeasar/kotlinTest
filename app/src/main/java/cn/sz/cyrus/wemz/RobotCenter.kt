@@ -1,4 +1,4 @@
-package cn.sz.cyrus.kotlintest
+package cn.sz.cyrus.wemz
 
 import android.content.Context
 import android.os.Looper
@@ -10,7 +10,6 @@ import com.turing.androidsdk.HttpRequestListener
 import com.turing.androidsdk.TuringManager
 import org.json.JSONObject
 import java.util.*
-import java.util.logging.Handler
 
 
 /**
@@ -38,7 +37,7 @@ class RobotCenter(context: Context) : EventListener {
             override fun onSuccess(p0: String?) {
                 val jsonObj = JSONObject(p0)
                 val code = jsonObj.getInt("code")
-                if (code == 100_00) {
+                if (code == 100_000) {
                     val text = jsonObj.getString("text")
                     speechSynthManager.speak(text)
                 }

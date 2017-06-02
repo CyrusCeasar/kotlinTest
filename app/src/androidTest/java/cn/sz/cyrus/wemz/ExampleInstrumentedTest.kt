@@ -1,4 +1,4 @@
-package cn.sz.cyrus.kotlintest
+package cn.sz.cyrus.wemz
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
