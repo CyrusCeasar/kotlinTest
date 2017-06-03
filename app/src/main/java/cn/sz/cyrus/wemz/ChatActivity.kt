@@ -1,5 +1,11 @@
 package cn.sz.cyrus.wemz
 
+import ai.api.AIServiceException
+import ai.api.android.AIConfiguration
+import ai.api.android.AIDataService
+import ai.api.model.AIRequest
+import ai.api.model.AIResponse
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -15,7 +21,6 @@ import com.turing.androidsdk.HttpRequestListener
 import com.turing.androidsdk.TuringManager
 
 
-
 /**
  * Created by 41264 on 05/24/17.
  */
@@ -25,11 +30,19 @@ class ChatActivity : BaseActivity() {
     var rv_contents: RecyclerView? = null
     var turingManager: TuringManager? = null
     var contents: ArrayList<String> = ArrayList()
+
+
+    val config = AIConfiguration("0bdbbce8888c4af0ae33ddf448fc2108",ai.api.AIConfiguration.SupportedLanguages.English, AIConfiguration.RecognitionEngine.System
+            )
+
+    var aiDataService:AIDataService? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_chat)
 
-
+        aiDataService = AIDataService(this, config)
         btn_send = findViewById(R.id.btn_send) as Button
         et_content = findViewById(R.id.et_content) as EditText
         rv_contents = findViewById(R.id.rv_contents) as RecyclerView
@@ -51,7 +64,31 @@ class ChatActivity : BaseActivity() {
             if (TextUtils.isEmpty(et_content!!.text.toString())) {
                 toastError("输入内容不能为空")
             } else {
-                turingManager!!.requestTuring(et_content!!.text.toString())
+//                turingManager!!.requestTuring(et_content!!.text.toString())
+                val aiRequest = AIRequest()
+                aiRequest.setQuery(et_content!!.text.toString())
+                object : AsyncTask<AIRequest, Void, AIResponse>() {
+                    override fun doInBackground(vararg requests: AIRequest): AIResponse? {
+                        val request = requests[0]
+                        try {
+                            val response = aiDataService!!.request(aiRequest)
+                            return response
+                        } catch (e: AIServiceException) {
+                        }
+
+                        return null
+                    }
+
+                    override fun onPostExecute(aiResponse: AIResponse?) {
+                        if (aiResponse != null) {
+                            val result = aiResponse.result
+                            contents.add(result.getResolvedQuery())
+                            rv_contents!!.adapter.notifyItemInserted(contents.size)
+
+                            Logger.d(result.getResolvedQuery())
+                        }
+                    }
+                }.execute(aiRequest)
                 et_content!!.setText("")
             }
         }
@@ -74,6 +111,6 @@ class ChatActivity : BaseActivity() {
     }
 
     class ChatItemHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
-        var tv_content: TextView ? = itemView!!.findViewById(R.id.tv_content) as TextView
+        var tv_content: TextView? = itemView!!.findViewById(R.id.tv_content) as TextView
     }
 }

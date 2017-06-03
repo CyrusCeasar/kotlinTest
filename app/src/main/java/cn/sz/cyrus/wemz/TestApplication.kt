@@ -1,6 +1,8 @@
 package cn.sz.cyrus.wemz
 
 import android.app.Application
+import android.content.Context
+import android.support.multidex.MultiDex
 import com.orhanobut.logger.LogLevel
 import com.orhanobut.logger.Logger
 import com.squareup.leakcanary.LeakCanary
@@ -17,6 +19,11 @@ class TestApplication : Application() {
         val asrManager = AsrManager()
     }
 
+
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+        MultiDex.install(this)
+    }
 
 
     override fun onCreate() {
