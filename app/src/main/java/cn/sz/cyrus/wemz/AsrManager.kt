@@ -45,7 +45,9 @@ class AsrManager : RecognitionListener {
 
     fun bindParams(intent: Intent) {
         intent.putExtra("sample", 16000) // 离线仅支持16000采样率
-        intent.putExtra("language", "cmn-Hans-CN") // 离线仅支持中文普通话
+//        intent.putExtra("language", "cmn-Hans-CN") // 离线仅支持中文普通话
+        intent.putExtra("language","en-GB")
+        intent.putExtra("nlu","enable")
         val prop = 20000
         intent.putExtra("prop", 20000) // 输入
 //    intent.putExtra("prop", 10060); // 地图

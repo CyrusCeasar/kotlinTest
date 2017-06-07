@@ -1,10 +1,6 @@
 package cn.sz.cyrus.wemz
 
-import ai.api.AIServiceException
-import ai.api.android.AIConfiguration
-import ai.api.android.AIDataService
-import ai.api.model.AIRequest
-import ai.api.model.AIResponse
+
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -32,17 +28,17 @@ class ChatActivity : BaseActivity() {
     var contents: ArrayList<String> = ArrayList()
 
 
-    val config = AIConfiguration("0bdbbce8888c4af0ae33ddf448fc2108",ai.api.AIConfiguration.SupportedLanguages.English, AIConfiguration.RecognitionEngine.System
+   /* val config = AIConfiguration("0bdbbce8888c4af0ae33ddf448fc2108",ai.api.AIConfiguration.SupportedLanguages.English, AIConfiguration.RecognitionEngine.System
             )
 
-    var aiDataService:AIDataService? = null
+    var aiDataService:AIDataService? = null*/
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_chat)
 
-        aiDataService = AIDataService(this, config)
+//        aiDataService = AIDataService(this, config)
         btn_send = findViewById(R.id.btn_send) as Button
         et_content = findViewById(R.id.et_content) as EditText
         rv_contents = findViewById(R.id.rv_contents) as RecyclerView
@@ -65,7 +61,7 @@ class ChatActivity : BaseActivity() {
                 toastError("输入内容不能为空")
             } else {
 //                turingManager!!.requestTuring(et_content!!.text.toString())
-                val aiRequest = AIRequest()
+             /*   val aiRequest = AIRequest()
                 aiRequest.setQuery(et_content!!.text.toString())
                 object : AsyncTask<AIRequest, Void, AIResponse>() {
                     override fun doInBackground(vararg requests: AIRequest): AIResponse? {
@@ -88,7 +84,7 @@ class ChatActivity : BaseActivity() {
                             Logger.d(result.getResolvedQuery())
                         }
                     }
-                }.execute(aiRequest)
+                }.execute(aiRequest)*/
                 et_content!!.setText("")
             }
         }

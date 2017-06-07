@@ -2,7 +2,6 @@ package cn.sz.cyrus.wemz
 
 import android.app.Application
 import android.content.Context
-import android.support.multidex.MultiDex
 import com.orhanobut.logger.LogLevel
 import com.orhanobut.logger.Logger
 import com.squareup.leakcanary.LeakCanary
@@ -22,7 +21,6 @@ class TestApplication : Application() {
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-        MultiDex.install(this)
     }
 
 
@@ -54,6 +52,8 @@ class TestApplication : Application() {
         vals.asrManager.init(this@TestApplication)
         Thread({
             vals.robotCenter = RobotCenter(this@TestApplication)
+            val ts = TranslateService()
+            ts.translate(TranslateService.vals.CN,TranslateService.vals.EN,"今天天气真不错")
         }).start()
 
     }

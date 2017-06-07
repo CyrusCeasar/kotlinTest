@@ -60,6 +60,7 @@ class SpeechSynthManager : SpeechSynthesizerListener {
         mSpeechSynthesizer.setApiKey("veE64XDN8KYCW8OY0nUW0V4H", "794f3ebb734216de3ed431e9b5d74d41")
         // 设置离线语音合成授权，需要填入从百度语音官网申请的app_id
         mSpeechSynthesizer.setAppId("9688537")
+     //   mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_LANGUAGE,"en-GB")
         // 设置语音合成文本模型文件
         mSpeechSynthesizer.setParam(SpeechSynthesizer.PARAM_TTS_TEXT_MODEL_FILE, TXT_FILE_PATH)
         // 设置语音合成声音模型文件
@@ -70,7 +71,7 @@ class SpeechSynthManager : SpeechSynthesizerListener {
         val authInfo = mSpeechSynthesizer.auth(TtsMode.MIX)
         // 判断授权信息是否正确，如果正确则初始化语音合成器并开始语音合成，如果失败则做错误处理
         if (authInfo.isSuccess) {
-            mSpeechSynthesizer.initTts(TtsMode.MIX)
+            mSpeechSynthesizer.initTts(TtsMode.ONLINE)
             Logger.i("tts init success");
             //mSpeechSynthesizer.speak("百度语音合成示例程序正在运行")
         } else {
