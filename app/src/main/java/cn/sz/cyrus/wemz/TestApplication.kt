@@ -52,8 +52,8 @@ class TestApplication : Application() {
         vals.asrManager.init(this@TestApplication)
         Thread({
             vals.robotCenter = RobotCenter(this@TestApplication)
-            val ts = TranslateService()
-            ts.translate(TranslateService.vals.CN,TranslateService.vals.EN,"今天天气真不错")
+
+
         }).start()
 
     }

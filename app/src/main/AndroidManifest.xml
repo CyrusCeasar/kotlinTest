@@ -21,7 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="cn.sz.cyrus.wemz.MainActivity"
+            android:name="cn.sz.cyrus.wemz.ChatActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -30,7 +30,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cn.sz.cyrus.wemz.ChatActivity"/>
+    <!--    <activity android:name="cn.sz.cyrus.wemz.ChatActivity"/>-->
         <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" />
         <!-- begin: baidu speech sdk-->
         <!-- 请填写应用实际的APP_ID -->

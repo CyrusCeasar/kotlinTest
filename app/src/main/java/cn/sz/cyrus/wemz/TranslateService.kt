@@ -5,6 +5,8 @@ import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.result.getAs
 import com.orhanobut.logger.Logger
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.security.MessageDigest
@@ -23,7 +25,7 @@ class TranslateService {
         val CN = "zh_CHS"
     }
 
-    fun translate(from:String,to:String,content:String){
+    fun translate(from:String,to:String,content:String,callBack:((result:String)->Unit)){
         val salt = System.currentTimeMillis().toString()
         val sign = md5(APP_KEY + content + salt + APP_SECRET)
         val params = HashMap<String, String>()
@@ -42,7 +44,11 @@ class TranslateService {
                 }
                 is Result.Success -> {
                     val data = result.getAs<String>()
-                    Logger.i(data)
+                    val jsonObj = JSONObject(data)
+                    val translation = jsonObj["translation"] as JSONArray
+                    val result = translation[0] as String
+                    callBack.invoke(result!!)
+                    Logger.i(result)
                 }
             }
         }

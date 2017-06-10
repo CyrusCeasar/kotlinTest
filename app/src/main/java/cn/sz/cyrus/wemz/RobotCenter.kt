@@ -21,8 +21,8 @@ class RobotCenter(context: Context) : EventListener {
     val eventManager: EventManager = EventManagerFactory.create(context, "wp")
     val params = HashMap<String, String>()
     val speechSynthManager = SpeechSynthManager()
-    val answerContents = arrayListOf("你好啊", "你好", "有什么可以帮您", "主人您好", "主人好")
-
+  //  val answerContents = arrayListOf("你好啊", "你好", "有什么可以帮您", "主人您好", "主人好")
+    val answerContentsEn = arrayListOf("what can i do for you","hello")
     init {
         eventManager.registerListener(this)
         // 3) 通知唤醒管理器, 启动唤醒功能
@@ -45,7 +45,7 @@ class RobotCenter(context: Context) : EventListener {
             }
 
         })
-        params.put("kws-file", "assets:///WakeUp.bin") // 设置唤醒资源, 唤醒资源文件可以放到任意可访问路径（同时支持放到assets目录，如实例中的写法）。唤醒资源请到 http://yuyin.baidu.com/wake#m4 来评估和导出
+        params.put("kws-file", "assets:///haloulili.bin") // 设置唤醒资源, 唤醒资源文件可以放到任意可访问路径（同时支持放到assets目录，如实例中的写法）。唤醒资源请到 http://yuyin.baidu.com/wake#m4 来评估和导出
         startWakeUp()
     }
 
@@ -63,7 +63,7 @@ class RobotCenter(context: Context) : EventListener {
         val jsonobj = JSONObject(p1)
         if (jsonobj.has("word") && "小丁你好".equals(jsonobj["word"])) {
             stopWakeUp()
-            speechSynthManager.speak(answerContents[Random().nextInt(answerContents.size)], {
+            speechSynthManager.speak(answerContentsEn[Random().nextInt(answerContentsEn.size)], {
                 android.os.Handler(Looper.getMainLooper()).post({
                     TestApplication.vals.asrManager.startASR({
                         code, str ->
