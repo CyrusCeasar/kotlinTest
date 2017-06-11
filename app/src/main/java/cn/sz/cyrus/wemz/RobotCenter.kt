@@ -61,7 +61,7 @@ class RobotCenter(context: Context) : EventListener {
     override fun onEvent(p0: String?, p1: String?, p2: ByteArray?, p3: Int, p4: Int) {
         Logger.v("$p0 $p1 $p3 $p4")
         val jsonobj = JSONObject(p1)
-        if (jsonobj.has("word") && "小丁你好".equals(jsonobj["word"])) {
+        if (jsonobj.has("word") && "哈喽莉莉".equals(jsonobj["word"])) {
             stopWakeUp()
             speechSynthManager.speak(answerContentsEn[Random().nextInt(answerContentsEn.size)], {
                 android.os.Handler(Looper.getMainLooper()).post({
