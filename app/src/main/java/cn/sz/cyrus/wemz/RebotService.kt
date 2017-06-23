@@ -15,7 +15,7 @@ import org.json.JSONObject
 class RebotService{
 
     fun chat(msg:String,callBack:(response:String)->Unit){
-        "http://192.168.0.2:8080/testcontroller.do?getRequest&token=$msg".httpGet().responseString { request, response, result ->
+        "http://45.78.12.192:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
             //do something with response
             when (result) {
                 is Result.Failure -> {

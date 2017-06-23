@@ -1,8 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center_horizontal"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/slateblue"
+        android:layout_height="50dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_centerInParent="true"
+
+            android:text="hello ! lili"/>
+    </RelativeLayout>
+
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_contents"
@@ -20,11 +36,14 @@
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:hint="please input content"
+            android:textColor="@color/black"
+            android:textColorHint="@color/gray"
             android:layout_height="match_parent" />
         <Button
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:background="#5ebef9"
             android:text="send"/>
     </LinearLayout>
 

@@ -67,10 +67,15 @@ class ChatActivity : BaseActivity() {
                 rebotService.chat(et_content!!.text.toString(), {
                     reponse ->
                     val respObj = JSONObject(reponse)
-                    val obj = respObj["obj"] as String
-                    contents.add(ChatItem(obj,ChatItem.TYPE.ROBOT))
+                    var resp:String? = null;
+                    if(respObj.has("result_content")){
+                         resp = respObj["result_content"] as String
+                    }else{
+                        resp = "i am sick"
+                    }
+                    contents.add(ChatItem(resp,ChatItem.TYPE.ROBOT))
                     rv_contents!!.adapter.notifyItemInserted(contents.size)
-                    TestApplication.vals.robotCenter?.speechSynthManager?.speak(obj)
+                    TestApplication.vals.robotCenter?.speechSynthManager?.speak(resp)
                 })
 //                turingManager!!.requestTuring(et_content!!.text.toString())
                 /*   val aiRequest = AIRequest()
