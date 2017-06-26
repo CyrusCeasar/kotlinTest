@@ -9,7 +9,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha3'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.letv.sarrsdesktop:BlockCanaryExPlugin:0.9.9.2'
         // NOTE: Do not place your application dependencies here; they belong
@@ -20,6 +20,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+
         maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }
         mavenCentral()
