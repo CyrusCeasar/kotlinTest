@@ -7,11 +7,16 @@ import android.arch.persistence.room.PrimaryKey
  * Created by chenlei2 on 2017/6/26 0026.
  */
 @Entity
-class ChatMsg {
+data class ChatMsg(var msg: String,
+              var to: Int) {
+    constructor() : this("", MASTER)
+    companion object TO {
+        val MASTER = 0
+        val ROBOT = 1
+    }
+
     @PrimaryKey(autoGenerate = true)
-    var id:Int = 0
-    var createTime:Long = 0
-    var msg:String = ""
-    var translMsg:String =""
-    var sendToRobot:Boolean = true
+    var id: Int = 0
+    var createTime: Long = System.currentTimeMillis()
+    var translMsg: String = ""
 }

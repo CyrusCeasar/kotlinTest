@@ -15,7 +15,9 @@ class TestApplication : Application() {
 
     object vals{
         var robotCenter:RobotCenter ?= null
+        var appDataBase:AppDatabase ?= null
         val asrManager = AsrManager()
+        val msgHistory = ArrayList<ChatMsg>()
     }
 
 
@@ -50,12 +52,15 @@ class TestApplication : Application() {
         Logger.d("$TAG onCreate")
 
         vals.asrManager.init(this@TestApplication)
+        vals.appDataBase = AppDatabase.getInMemoryDatabase(this@TestApplication)
+        vals.msgHistory.addAll(vals.appDataBase!!.getChatMsgDao().getAll())
+        if(vals.msgHistory.isEmpty()){
+            val robotService  = RebotService()
+            robotService.storeMsg(ChatMsg("Hello,I am lili . Nice to meet you! Click this msg Or long click. You will be surprised",ChatMsg.TO.MASTER))
+        }
         Thread({
             vals.robotCenter = RobotCenter(this@TestApplication)
-
-
         }).start()
-
     }
 
 

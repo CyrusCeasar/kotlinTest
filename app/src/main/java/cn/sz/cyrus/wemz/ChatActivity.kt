@@ -26,7 +26,9 @@ class ChatActivity : BaseActivity() {
     var et_content: EditText? = null
     var rv_contents: RecyclerView? = null
     var turingManager: TuringManager? = null
-    val contents: ArrayList<ChatItem> = ArrayList()
+
+    val chatMsgDao = TestApplication.vals.appDataBase!!.getChatMsgDao()
+//    val contents: ArrayList<ChatItem> = ArrayList()
 
 
     /* val config = AIConfiguration("0bdbbce8888c4af0ae33ddf448fc2108",ai.api.AIConfiguration.SupportedLanguages.English, AIConfiguration.RecognitionEngine.System
@@ -50,8 +52,8 @@ class ChatActivity : BaseActivity() {
             }
 
             override fun onSuccess(p0: String?) {
-                p0?.let { contents.add(ChatItem(p0,ChatItem.TYPE.ROBOT)) }
-                rv_contents!!.adapter.notifyItemInserted(contents.size)
+          //      p0?.let { contents.add(ChatItem(p0,ChatItem.TYPE.ROBOT)) }
+                rv_contents!!.adapter.notifyItemInserted(TestApplication.vals.msgHistory.size)
 
                 Logger.d(p0)
             }
@@ -61,21 +63,24 @@ class ChatActivity : BaseActivity() {
             if (TextUtils.isEmpty(et_content!!.text.toString())) {
                 toastError("输入内容不能为空")
             } else {
-                contents.add(ChatItem(et_content!!.text.toString(),ChatItem.TYPE.MASTER))
-                rv_contents!!.adapter.notifyItemInserted(contents.size)
+       //         contents.add(ChatItem(et_content!!.text.toString(),ChatItem.TYPE.MASTER))
+
                 val rebotService = RebotService()
+                if(rebotService.storeMsg(ChatMsg(et_content!!.text.toString(),ChatMsg.TO.ROBOT))){
+                    rv_contents!!.adapter.notifyItemInserted(TestApplication.vals.msgHistory.size)
+                }
                 rebotService.chat(et_content!!.text.toString(), {
                     reponse ->
-                    val respObj = JSONObject(reponse)
+                  /*  val respObj = JSONObject(reponse)
                     var resp:String? = null;
                     if(respObj.has("result_content")){
                          resp = respObj["result_content"] as String
                     }else{
                         resp = "i am sick"
                     }
-                    contents.add(ChatItem(resp,ChatItem.TYPE.ROBOT))
-                    rv_contents!!.adapter.notifyItemInserted(contents.size)
-                    TestApplication.vals.robotCenter?.speechSynthManager?.speak(resp)
+                    contents.add(ChatItem(resp,ChatItem.TYPE.ROBOT))*/
+                    rv_contents!!.adapter.notifyItemInserted(TestApplication.vals.msgHistory.size)
+                //    TestApplication.vals.robotCenter?.speechSynthManager?.speak(resp)
                 })
 //                turingManager!!.requestTuring(et_content!!.text.toString())
                 /*   val aiRequest = AIRequest()
@@ -109,12 +114,12 @@ class ChatActivity : BaseActivity() {
         rv_contents!!.layoutManager = LinearLayoutManager(this)
         rv_contents!!.adapter = object : Adapter<ChatItemHolder>() {
             override fun onBindViewHolder(p0: ChatItemHolder?, p1: Int) {
-                val chatitem:ChatItem = contents[p1]
-                p0?.tv_content?.text = chatitem.trsResult?:chatitem.content
+                val chatMsg:ChatMsg = TestApplication.vals.msgHistory[p1]
+                p0?.tv_content?.text = chatMsg.msg
                 p0?.tv_content?.setOnClickListener {
-                    TranslateService().translate(TranslateService.vals.EN,TranslateService.vals.CN,contents[p1].content,{
+                    TranslateService().translate(TranslateService.vals.EN,TranslateService.vals.CN,TestApplication.vals.msgHistory[p1].msg,{
                         result->
-                        chatitem.trsResult = result
+                        chatMsg.translMsg = result
                         p0?.tv_content?.text = result
                     })
                  }
@@ -122,23 +127,23 @@ class ChatActivity : BaseActivity() {
 
             override fun onCreateViewHolder(p0: ViewGroup?, p1: Int): ChatItemHolder {
                 when(getItemViewType(p1)){
-                    ChatItem.TYPE.MASTER  ->  return ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_master, null))
-                    ChatItem.TYPE.ROBOT ->    return ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_robot, null))
+                    ChatMsg.TO.ROBOT->  return ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_master, null))
+                    ChatMsg.TO.MASTER->    return ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_robot, null))
                     else ->  return ChatItemHolder(layoutInflater.inflate(R.layout.item_chat, null))
                 }
             }
 
             override fun getItemCount(): Int {
-                return contents.size
+                return TestApplication.vals.msgHistory.size
             }
 
             override fun getItemViewType(position: Int): Int {
-                return contents[position].type
+                return  TestApplication.vals.msgHistory[position].to
             }
         }
     }
 
-    class ChatItem(content:String,type:Int){
+   /* class ChatItem(content:String,type:Int){
         object TYPE{
             val MASTER = 0
             val ROBOT = 1
@@ -146,7 +151,7 @@ class ChatActivity : BaseActivity() {
         val content:String = content
         val type:Int = type
         var trsResult:String ?= null
-    }
+    }*/
 
     class ChatItemHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         var tv_content: TextView? = itemView!!.findViewById(R.id.tv_content) as TextView
