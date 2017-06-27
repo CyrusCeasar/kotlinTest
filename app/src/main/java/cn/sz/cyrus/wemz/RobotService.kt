@@ -12,7 +12,7 @@ import org.json.JSONObject
  */
 
 
-class RebotService{
+class RobotService {
 
     fun chat(msg:String,callBack:(response:String)->Unit){
 

@@ -10,7 +10,7 @@ import android.arch.persistence.room.Update
  */
 @Dao
 interface IChatMsgDao {
-    @Query("select * from ChatMsg")
+    @Query("SELECT * FROM ChatMsg")
     fun getAll():List<ChatMsg>
 
     @Insert

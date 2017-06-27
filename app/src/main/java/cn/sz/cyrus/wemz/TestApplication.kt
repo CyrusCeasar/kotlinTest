@@ -53,9 +53,10 @@ class TestApplication : Application() {
 
         vals.asrManager.init(this@TestApplication)
         vals.appDataBase = AppDatabase.getInMemoryDatabase(this@TestApplication)
-        vals.msgHistory.addAll(vals.appDataBase!!.getChatMsgDao().getAll())
+        val historys = vals.appDataBase!!.getChatMsgDao().getAll()
+        vals.msgHistory.addAll(historys)
         if(vals.msgHistory.isEmpty()){
-            val robotService  = RebotService()
+            val robotService  = RobotService()
             robotService.storeMsg(ChatMsg("Hello,I am lili . Nice to meet you! Click this msg Or long click. You will be surprised",ChatMsg.TO.MASTER))
         }
         Thread({

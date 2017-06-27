@@ -65,7 +65,7 @@ class ChatActivity : BaseActivity() {
             } else {
        //         contents.add(ChatItem(et_content!!.text.toString(),ChatItem.TYPE.MASTER))
 
-                val rebotService = RebotService()
+                val rebotService = RobotService()
                 if(rebotService.storeMsg(ChatMsg(et_content!!.text.toString(),ChatMsg.TO.ROBOT))){
                     rv_contents!!.adapter.notifyItemInserted(TestApplication.vals.msgHistory.size)
                 }
@@ -117,12 +117,21 @@ class ChatActivity : BaseActivity() {
                 val chatMsg:ChatMsg = TestApplication.vals.msgHistory[p1]
                 p0?.tv_content?.text = chatMsg.msg
                 p0?.tv_content?.setOnClickListener {
-                    TranslateService().translate(TranslateService.vals.EN,TranslateService.vals.CN,TestApplication.vals.msgHistory[p1].msg,{
-                        result->
-                        chatMsg.translMsg = result
-                        p0?.tv_content?.text = result
-                    })
-                 }
+                    if (p0?.tv_content?.text.toString().equals(chatMsg.translMsg)) {
+                        p0?.tv_content?.text = chatMsg.msg
+                    } else {
+                        if (TextUtils.isEmpty(chatMsg.translMsg)) {
+                            TranslateService().translate(TranslateService.vals.EN, TranslateService.vals.CN, TestApplication.vals.msgHistory[p1].msg, {
+                                result ->
+                                chatMsg.translMsg = result
+                                chatMsgDao.updateChatMsg(chatMsg)
+                                p0?.tv_content?.text = result
+                            })
+                        } else {
+                            p0?.tv_content?.text = chatMsg.translMsg
+                        }
+                    }
+                }
              }
 
             override fun onCreateViewHolder(p0: ViewGroup?, p1: Int): ChatItemHolder {

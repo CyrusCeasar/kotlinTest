@@ -23,11 +23,13 @@ class RobotCenter(context: Context) : EventListener {
     val speechSynthManager = SpeechSynthManager()
   //  val answerContents = arrayListOf("你好啊", "你好", "有什么可以帮您", "主人您好", "主人好")
     val answerContentsEn = arrayListOf("what can i do for you","hello")
+    val robotService:RobotService = RobotService()
     init {
         eventManager.registerListener(this)
         // 3) 通知唤醒管理器, 启动唤醒功能
         if (speechSynthManager.check((context)))
             speechSynthManager.init(context)
+
 
         turingManager.setHttpRequestListener(object : HttpRequestListener {
             override fun onFail(p0: Int, p1: String?) {
@@ -69,7 +71,18 @@ class RobotCenter(context: Context) : EventListener {
                         code, str ->
                         startWakeUp()
                         if (code == 1) {
-                            turingManager.requestTuring(str)
+                            robotService.chat(str,{
+                             response ->
+                                val respObj = JSONObject(response)
+                                var resp:String? = null;
+                                if(respObj.has("result_content")){
+                                    resp = respObj["result_content"] as String
+                                }else{
+                                    resp = "i am sick"
+                                }
+                                TestApplication.vals.robotCenter?.speechSynthManager?.speak(resp)
+                            })
+                     //       turingManager.requestTuring(str)
                         }
                         Logger.i("$code $str")
                     })
