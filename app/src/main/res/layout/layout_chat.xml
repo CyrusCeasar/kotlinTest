@@ -16,7 +16,7 @@
             android:textSize="20sp"
             android:layout_centerInParent="true"
 
-            android:text="hello ! lili"/>
+            android:text="hello , lili"/>
     </RelativeLayout>
 
 
@@ -30,6 +30,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/bord_bottom"
         android:orientation="horizontal">
         <EditText
             android:id="@+id/et_content"
@@ -41,8 +43,9 @@
             android:layout_height="match_parent" />
         <Button
             android:id="@+id/btn_send"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:padding="5dp"
             android:background="#5ebef9"
             android:text="send"/>
     </LinearLayout>

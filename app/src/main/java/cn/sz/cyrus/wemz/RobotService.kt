@@ -14,6 +14,34 @@ import org.json.JSONObject
 
 class RobotService {
 
+    fun chat(msg:String){
+        "http://45.78.12.192:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
+            //do something with response
+            when (result) {
+                is Result.Failure -> {
+                    val error = result.getAs<FuelError>()
+                    val jsonObj = JSONObject()
+                    jsonObj.put("obj","i am sick")
+
+                    storeMsg(ChatMsg("i am sick",ChatMsg.TO.MASTER))
+                    Logger.e(error.toString())
+                }
+                is Result.Success -> {
+                    val data = result.getAs<String>()
+                    Logger.i(data)
+                    val respObj = JSONObject(data)
+                    var resp:String? = null;
+                    if(respObj.has("result_content")){
+                        resp = respObj["result_content"] as String
+                    }else{
+                        resp = "i am sick"
+                    }
+                    storeMsg(ChatMsg(resp,ChatMsg.TO.MASTER))
+                }
+            }
+        }
+    }
+
     fun chat(msg:String,callBack:(response:String)->Unit){
 
         "http://45.78.12.192:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
@@ -44,12 +72,14 @@ class RobotService {
             }
         }
     }
+
+
     fun storeMsg(chatMsg:ChatMsg):Boolean{
-        val chatMsgDao = TestApplication.vals.appDataBase!!.getChatMsgDao()
+        val chatMsgDao = TestApplication.appDataBase!!.getChatMsgDao()
         val result = chatMsgDao.insertChatMsg(chatMsg)
         if(result> 0){
             chatMsg.id = result.toInt()
-            TestApplication.vals.msgHistory.add(chatMsg)
+            TestApplication.INSTANCE.addChatMsg(chatMsg)
             return true
         }
         return  false

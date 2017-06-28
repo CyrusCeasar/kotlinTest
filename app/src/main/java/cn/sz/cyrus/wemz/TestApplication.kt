@@ -5,6 +5,7 @@ import android.content.Context
 import com.orhanobut.logger.LogLevel
 import com.orhanobut.logger.Logger
 import com.squareup.leakcanary.LeakCanary
+import java.util.concurrent.CopyOnWriteArrayList
 
 
 /**
@@ -12,17 +13,43 @@ import com.squareup.leakcanary.LeakCanary
  */
 class TestApplication : Application() {
     val TAG = TestApplication::class.simpleName
-
-    object vals{
+    companion object {
         var robotCenter:RobotCenter ?= null
         var appDataBase:AppDatabase ?= null
         val asrManager = AsrManager()
-        val msgHistory = ArrayList<ChatMsg>()
+        private val msgHistory = ArrayList<ChatMsg>()
+        private val onMsgChangeListenerList = CopyOnWriteArrayList<()->Unit>()
+        lateinit var INSTANCE:TestApplication
     }
 
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
+    }
+
+
+    fun addChatMsg(chatMsg: ChatMsg){
+        msgHistory.add(chatMsg)
+        onMsgChangeListenerList.forEach {
+            listener->
+            listener.invoke()
+        }
+    }
+
+    fun addMsgChangeListener(listener:()->Unit){
+        onMsgChangeListenerList.add(listener)
+    }
+
+    fun removeMsgChangeListener(listener: () -> Unit){
+        onMsgChangeListenerList.remove (listener)
+    }
+
+
+    fun getHistorySize():Int{
+        return msgHistory.size
+    }
+    fun getChatMsg(position:Int):ChatMsg{
+        return msgHistory[position]
     }
 
 
@@ -32,6 +59,7 @@ class TestApplication : Application() {
             BlockCanaryEx.install(Config(this))
         }*/
         super.onCreate()
+        INSTANCE = this
 
      /*   if (!isInSamplerProcess) {
             //your code start here
@@ -51,16 +79,16 @@ class TestApplication : Application() {
 
         Logger.d("$TAG onCreate")
 
-        vals.asrManager.init(this@TestApplication)
-        vals.appDataBase = AppDatabase.getInMemoryDatabase(this@TestApplication)
-        val historys = vals.appDataBase!!.getChatMsgDao().getAll()
-        vals.msgHistory.addAll(historys)
-        if(vals.msgHistory.isEmpty()){
+        asrManager.init(this@TestApplication)
+        appDataBase = AppDatabase.getInMemoryDatabase(this@TestApplication)
+        val historys = appDataBase!!.getChatMsgDao().getAll()
+        msgHistory.addAll(historys)
+        if(msgHistory.isEmpty()){
             val robotService  = RobotService()
-            robotService.storeMsg(ChatMsg("Hello,I am lili . Nice to meet you! Click this msg Or long click. You will be surprised",ChatMsg.TO.MASTER))
+            robotService.storeMsg(ChatMsg("Hello,I am lili . Nice to meet you! Click this message Or long click. You will be surprised . If you tired of sending message to me , say 'Hello,LiLi' to me .",ChatMsg.TO.MASTER))
         }
         Thread({
-            vals.robotCenter = RobotCenter(this@TestApplication)
+            robotCenter = RobotCenter(this@TestApplication)
         }).start()
     }
 

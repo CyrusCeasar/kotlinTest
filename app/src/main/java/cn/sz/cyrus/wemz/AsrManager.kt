@@ -89,6 +89,12 @@ class AsrManager : RecognitionListener {
         intent.putExtra("slot-data", slotData.toString())
     }
 
+    fun startAsrDialog(activity: BaseActivity,requestCode: Int){
+        val intent =  Intent("com.baidu.action.RECOGNIZE_SPEECH")
+        bindParams(intent)
+        activity.startActivityForResult(intent,requestCode)
+    }
+
 
     override fun onReadyForSpeech(params: Bundle?) {
         Logger.d("readyForSpeech")

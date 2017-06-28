@@ -51,7 +51,9 @@ class RobotCenter(context: Context) : EventListener {
         startWakeUp()
     }
 
-
+    fun speak(content:String){
+        speechSynthManager.speak(content)
+    }
     fun startWakeUp() {
         eventManager.send("wp.start", JSONObject(params).toString(), null, 0, 0)
     }
@@ -67,10 +69,11 @@ class RobotCenter(context: Context) : EventListener {
             stopWakeUp()
             speechSynthManager.speak(answerContentsEn[Random().nextInt(answerContentsEn.size)], {
                 android.os.Handler(Looper.getMainLooper()).post({
-                    TestApplication.vals.asrManager.startASR({
+                    TestApplication.asrManager.startASR({
                         code, str ->
                         startWakeUp()
                         if (code == 1) {
+                            robotService.storeMsg(ChatMsg(str,ChatMsg.ROBOT))
                             robotService.chat(str,{
                              response ->
                                 val respObj = JSONObject(response)
@@ -80,7 +83,7 @@ class RobotCenter(context: Context) : EventListener {
                                 }else{
                                     resp = "i am sick"
                                 }
-                                TestApplication.vals.robotCenter?.speechSynthManager?.speak(resp)
+                                TestApplication.robotCenter?.speechSynthManager?.speak(resp)
                             })
                      //       turingManager.requestTuring(str)
                         }
