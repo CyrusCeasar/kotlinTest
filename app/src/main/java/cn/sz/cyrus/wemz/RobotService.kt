@@ -15,7 +15,7 @@ import org.json.JSONObject
 class RobotService {
 
     fun chat(msg:String){
-        "http://45.78.12.192:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
+        "http://39.108.179.107:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
             //do something with response
             when (result) {
                 is Result.Failure -> {
@@ -44,7 +44,7 @@ class RobotService {
 
     fun chat(msg:String,callBack:(response:String)->Unit){
 
-        "http://45.78.12.192:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
+        "http://39.108.179.107:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
             //do something with response
             when (result) {
                 is Result.Failure -> {

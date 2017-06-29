@@ -17,6 +17,8 @@ import com.orhanobut.logger.Logger
 import com.turing.androidsdk.HttpRequestListener
 import com.turing.androidsdk.TuringManager
 import android.speech.SpeechRecognizer
+import com.transitionseverywhere.ChangeText
+import com.transitionseverywhere.TransitionManager
 
 
 /**
@@ -92,7 +94,10 @@ class ChatActivity : BaseActivity() {
                      true
                 }
                 p0?.tv_content?.setOnClickListener {
+                    val transitionsContainer = p0?.tv_content?.parent
                     if (p0?.tv_content?.text.toString().equals(chatMsg.translMsg)) {
+                        TransitionManager.beginDelayedTransition(transitionsContainer as ViewGroup?,
+                                ChangeText().setChangeBehavior(ChangeText.CHANGE_BEHAVIOR_OUT_IN))
                         p0?.tv_content?.text = chatMsg.msg
                     } else {
                         if (TextUtils.isEmpty(chatMsg.translMsg)) {
@@ -100,9 +105,13 @@ class ChatActivity : BaseActivity() {
                                 result ->
                                 chatMsg.translMsg = result
                                 chatMsgDao.updateChatMsg(chatMsg)
+                                TransitionManager.beginDelayedTransition(transitionsContainer as ViewGroup?,
+                                        ChangeText().setChangeBehavior(ChangeText.CHANGE_BEHAVIOR_OUT_IN))
                                 p0?.tv_content?.text = result
                             })
                         } else {
+                            TransitionManager.beginDelayedTransition(transitionsContainer as ViewGroup?,
+                                    ChangeText().setChangeBehavior(ChangeText.CHANGE_BEHAVIOR_OUT_IN))
                             p0?.tv_content?.text = chatMsg.translMsg
                         }
                     }

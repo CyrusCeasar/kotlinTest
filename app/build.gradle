@@ -68,5 +68,6 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.0.0-alpha3"
     kapt "android.arch.persistence.room:compiler:1.0.0-alpha3"
     compile "android.arch.persistence.room:rxjava2:1.0.0-alpha3"
+    compile project(':library')
 
 }
