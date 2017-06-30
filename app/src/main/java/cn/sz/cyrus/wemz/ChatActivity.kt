@@ -119,10 +119,10 @@ class ChatActivity : BaseActivity() {
              }
 
             override fun onCreateViewHolder(p0: ViewGroup?, p1: Int): ChatItemHolder {
-                when(getItemViewType(p1)){
-                    ChatMsg.TO.ROBOT->  return ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_master, null))
-                    ChatMsg.TO.MASTER->    return ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_robot, null))
-                    else ->  return ChatItemHolder(layoutInflater.inflate(R.layout.item_chat, null))
+             return  when(getItemViewType(p1)){
+                    ChatMsg.TO.ROBOT->   ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_master, null))
+                    ChatMsg.TO.MASTER->     ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_robot, null))
+                    else ->   ChatItemHolder(layoutInflater.inflate(R.layout.item_chat, null))
                 }
             }
 
@@ -134,6 +134,7 @@ class ChatActivity : BaseActivity() {
                 return  TestApplication.INSTANCE.getChatMsg(position).to
             }
         }
+        TestApplication.robotCenter!!.robotService.getPrompt()
 
     }
     val msgChangeListener = {

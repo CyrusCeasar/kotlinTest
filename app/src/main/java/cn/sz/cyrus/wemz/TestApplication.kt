@@ -13,13 +13,14 @@ import java.util.concurrent.CopyOnWriteArrayList
  */
 class TestApplication : Application() {
     val TAG = TestApplication::class.simpleName
+
     companion object {
-        var robotCenter:RobotCenter ?= null
-        var appDataBase:AppDatabase ?= null
+        var robotCenter: RobotCenter? = null
+        var appDataBase: AppDatabase? = null
         val asrManager = AsrManager()
         private val msgHistory = ArrayList<ChatMsg>()
-        private val onMsgChangeListenerList = CopyOnWriteArrayList<()->Unit>()
-        lateinit var INSTANCE:TestApplication
+        private val onMsgChangeListenerList = CopyOnWriteArrayList<() -> Unit>()
+        lateinit var INSTANCE: TestApplication
     }
 
 
@@ -28,42 +29,43 @@ class TestApplication : Application() {
     }
 
 
-    fun addChatMsg(chatMsg: ChatMsg){
+    fun addChatMsg(chatMsg: ChatMsg) {
         msgHistory.add(chatMsg)
         onMsgChangeListenerList.forEach {
-            listener->
+            listener ->
             listener.invoke()
         }
     }
 
-    fun addMsgChangeListener(listener:()->Unit){
+    fun addMsgChangeListener(listener: () -> Unit) {
         onMsgChangeListenerList.add(listener)
     }
 
-    fun removeMsgChangeListener(listener: () -> Unit){
-        onMsgChangeListenerList.remove (listener)
+    fun removeMsgChangeListener(listener: () -> Unit) {
+        onMsgChangeListenerList.remove(listener)
     }
 
 
-    fun getHistorySize():Int{
+    fun getHistorySize(): Int {
         return msgHistory.size
     }
-    fun getChatMsg(position:Int):ChatMsg{
+
+    fun getChatMsg(position: Int): ChatMsg {
         return msgHistory[position]
     }
 
 
     override fun onCreate() {
-      /*  val isInSamplerProcess = BlockCanaryEx.isInSamplerProcess(this)
-        if (!isInSamplerProcess) {
-            BlockCanaryEx.install(Config(this))
-        }*/
+        /*  val isInSamplerProcess = BlockCanaryEx.isInSamplerProcess(this)
+          if (!isInSamplerProcess) {
+              BlockCanaryEx.install(Config(this))
+          }*/
         super.onCreate()
         INSTANCE = this
 
-     /*   if (!isInSamplerProcess) {
-            //your code start here
-        }*/
+        /*   if (!isInSamplerProcess) {
+               //your code start here
+           }*/
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
@@ -75,7 +77,7 @@ class TestApplication : Application() {
         Logger.init(TAG)                 // default PRETTYLOGGER or use just init()
                 .methodCount(3)                 // default 2
                 .logLevel(LogLevel.FULL)        // default LogLevel.FULL
-                            // default 0
+        // default 0
 
         Logger.d("$TAG onCreate")
 
@@ -83,13 +85,11 @@ class TestApplication : Application() {
         appDataBase = AppDatabase.getInMemoryDatabase(this@TestApplication)
         val historys = appDataBase!!.getChatMsgDao().getAll()
         msgHistory.addAll(historys)
-        if(msgHistory.isEmpty()){
-            val robotService  = RobotService()
-            robotService.storeMsg(ChatMsg("Hello,I am lili . Nice to meet you! Click this message Or long click. You will be surprised . If you tired of sending message to me , say 'Hello,LiLi' to me .",ChatMsg.TO.MASTER))
+        if (msgHistory.isEmpty()) {
+            val robotService = RobotService()
+            robotService.storeMsg(ChatMsg("Hello,I am lili . Nice to meet you! Click this message Or long click. You will be surprised . If you tired of sending message to me , say 'Hello,LiLi' to me .", ChatMsg.TO.MASTER))
         }
-        Thread({
-            robotCenter = RobotCenter(this@TestApplication)
-        }).start()
+        robotCenter = RobotCenter(this@TestApplication)
     }
 
 

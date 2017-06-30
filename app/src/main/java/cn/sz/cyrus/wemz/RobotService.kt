@@ -15,14 +15,13 @@ import org.json.JSONObject
 class RobotService {
 
     fun chat(msg:String){
-        "http://39.108.179.107:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
+        "http://39.108.179.107:8080/lili/test.json?req_msg=$msg".httpGet().responseString { request, response, result ->
             //do something with response
             when (result) {
                 is Result.Failure -> {
                     val error = result.getAs<FuelError>()
                     val jsonObj = JSONObject()
                     jsonObj.put("obj","i am sick")
-
                     storeMsg(ChatMsg("i am sick",ChatMsg.TO.MASTER))
                     Logger.e(error.toString())
                 }
@@ -41,10 +40,66 @@ class RobotService {
             }
         }
     }
+    fun getPrompt(){
+        "http://39.108.179.107:8080/lili/promptMsg.json".httpGet().responseString{
+            request, response, result ->
+            //do something with response
+            when (result) {
+                is Result.Failure -> {
+                    val error = result.getAs<FuelError>()
+                    val jsonObj = JSONObject()
+                    jsonObj.put("obj","i am sick")
+                    storeMsg(ChatMsg("i am sick",ChatMsg.TO.MASTER))
+                    Logger.e(error.toString())
+                }
+                is Result.Success -> {
+                    val data = result.getAs<String>()
+                    Logger.i(data)
+                    val respObj = JSONObject(data)
+                    var resp:String? = null;
+                    if(respObj.has("result_content")){
+                        resp = respObj["result_content"] as String
+                    }else{
+                        resp = "i am sick"
+                    }
+                    storeMsg(ChatMsg(resp,ChatMsg.TO.MASTER))
+                }
+            }
+        }
+    }
+    fun getPrompt(callBack:(response:String)->Unit){
+        "http://39.108.179.107:8080/lili/promptMsg.json".httpGet().responseString{
+            request, response, result ->
+            //do something with response
+            when (result) {
+                is Result.Failure -> {
+                    val error = result.getAs<FuelError>()
+                    val jsonObj = JSONObject()
+                    jsonObj.put("obj","i am sick")
+                    callBack.invoke(jsonObj.toString())
+                    storeMsg(ChatMsg("i am sick",ChatMsg.TO.MASTER))
+                    Logger.e(error.toString())
+                }
+                is Result.Success -> {
+                    val data = result.getAs<String>()
+                    Logger.i(data)
+                    val respObj = JSONObject(data)
+                    var resp:String? = null;
+                    if(respObj.has("result_content")){
+                        resp = respObj["result_content"] as String
+                    }else{
+                        resp = "i am sick"
+                    }
+                    storeMsg(ChatMsg(resp,ChatMsg.TO.MASTER))
+                    callBack.invoke(data!!)
+                }
+            }
+        }
+    }
 
     fun chat(msg:String,callBack:(response:String)->Unit){
 
-        "http://39.108.179.107:8080/lili/test?req_msg=$msg".httpGet().responseString { request, response, result ->
+        "http://39.108.179.107:8080/lili/test.json?req_msg=$msg".httpGet().responseString { request, response, result ->
             //do something with response
             when (result) {
                 is Result.Failure -> {
