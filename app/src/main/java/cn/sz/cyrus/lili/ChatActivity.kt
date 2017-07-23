@@ -119,7 +119,7 @@ class ChatActivity : BaseActivity() {
              }
 
             override fun onCreateViewHolder(p0: ViewGroup?, p1: Int): ChatItemHolder {
-             return  when(getItemViewType(p1)){
+             return  when(p1){
                     ChatMsg.TO.ROBOT->   ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_master, null))
                     ChatMsg.TO.MASTER->     ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_robot, null))
                     else ->   ChatItemHolder(layoutInflater.inflate(R.layout.item_chat, null))

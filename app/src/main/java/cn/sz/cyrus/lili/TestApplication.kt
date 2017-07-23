@@ -81,7 +81,7 @@ class TestApplication : Application() {
 
         Logger.d("$TAG onCreate")
 
-        asrManager.init(this@TestApplication)
+
         appDataBase = AppDatabase.getInMemoryDatabase(this@TestApplication)
         val historys = appDataBase!!.getChatMsgDao().getAll()
         msgHistory.addAll(historys)
@@ -90,6 +90,9 @@ class TestApplication : Application() {
             robotService.storeMsg(ChatMsg("Hello,I am lili . Nice to meet you! Click this message Or long click. You will be surprised . If you tired of sending message to me , say 'Hello,LiLi' to me .", ChatMsg.TO.MASTER))
         }
         robotCenter = RobotCenter(this@TestApplication)
+        Thread{
+            asrManager.init(this@TestApplication)
+        }
     }
 
 

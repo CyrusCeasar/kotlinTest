@@ -72,7 +72,8 @@ class SpeechSynthManager : SpeechSynthesizerListener {
         // 判断授权信息是否正确，如果正确则初始化语音合成器并开始语音合成，如果失败则做错误处理
         if (authInfo.isSuccess) {
             mSpeechSynthesizer.initTts(TtsMode.ONLINE)
-            Logger.i("tts init success");
+            Logger.i("tts init success")
+            mSpeechSynthesizer.speak("Hello I am lili")
             //mSpeechSynthesizer.speak("百度语音合成示例程序正在运行")
         } else {
             // 授权失败

@@ -17,21 +17,29 @@ import java.util.*
  */
 class RobotCenter(context: Context) : EventListener {
 
-    val turingManager: TuringManager = TuringManager(context, "4845d979e70d4f6bad9c790d342f8c02", "9ad19814c79a12a9")
-    val eventManager: EventManager = EventManagerFactory.create(context, "wp")
+//    val turingManager: TuringManager = TuringManager(context, "4845d979e70d4f6bad9c790d342f8c02", "9ad19814c79a12a9")
+    lateinit var eventManager: EventManager
     val params = HashMap<String, String>()
-    val speechSynthManager = SpeechSynthManager()
+    lateinit var speechSynthManager:SpeechSynthManager
   //  val answerContents = arrayListOf("你好啊", "你好", "有什么可以帮您", "主人您好", "主人好")
     val answerContentsEn = arrayListOf("what can i do for you","hello")
     val robotService:RobotService = RobotService()
     init {
-        eventManager.registerListener(this)
-        // 3) 通知唤醒管理器, 启动唤醒功能
-        if (speechSynthManager.check((context)))
-            speechSynthManager.init(context)
+        Thread{
 
+            eventManager= EventManagerFactory.create(context, "wp")
 
-        turingManager.setHttpRequestListener(object : HttpRequestListener {
+            eventManager.registerListener(this)
+            // 3) 通知唤醒管理器, 启动唤醒功能
+
+            params.put("kws-file", "assets:///haloulili.bin") // 设置唤醒资源, 唤醒资源文件可以放到任意可访问路径（同时支持放到assets目录，如实例中的写法）。唤醒资源请到 http://yuyin.baidu.com/wake#m4 来评估和导出
+            startWakeUp()
+            speechSynthManager = SpeechSynthManager()
+            if (speechSynthManager.check((context)))
+                speechSynthManager.init(context)
+        }.start()
+
+     /*   turingManager.setHttpRequestListener(object : HttpRequestListener {
             override fun onFail(p0: Int, p1: String?) {
                 Logger.w("$p0 $p1")
             }
@@ -46,9 +54,8 @@ class RobotCenter(context: Context) : EventListener {
                 Logger.i(p0)
             }
 
-        })
-        params.put("kws-file", "assets:///haloulili.bin") // 设置唤醒资源, 唤醒资源文件可以放到任意可访问路径（同时支持放到assets目录，如实例中的写法）。唤醒资源请到 http://yuyin.baidu.com/wake#m4 来评估和导出
-        startWakeUp()
+        })*/
+
     }
 
     fun speak(content:String){
@@ -65,6 +72,7 @@ class RobotCenter(context: Context) : EventListener {
     override fun onEvent(p0: String?, p1: String?, p2: ByteArray?, p3: Int, p4: Int) {
         Logger.v("$p0 $p1 $p3 $p4")
         val jsonobj = JSONObject(p1)
+
         if (jsonobj.has("word") && "哈喽莉莉".equals(jsonobj["word"])) {
             stopWakeUp()
             speechSynthManager.speak(answerContentsEn[Random().nextInt(answerContentsEn.size)], {
@@ -77,7 +85,7 @@ class RobotCenter(context: Context) : EventListener {
                             robotService.chat(str,{
                              response ->
                                 val respObj = JSONObject(response)
-                                var resp:String? = null;
+                                var resp:String? = null
                                 if(respObj.has("result_content")){
                                     resp = respObj["result_content"] as String
                                 }else{
