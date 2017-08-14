@@ -1,4 +1,4 @@
-package cn.sz.cyrus.wemz
+package cn.sz.cyrus.lili
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

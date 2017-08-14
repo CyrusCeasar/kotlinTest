@@ -1,4 +1,4 @@
-package cn.sz.cyrus.wemz
+package cn.sz.cyrus.lili
 
 import android.content.ComponentName
 import android.content.Context
@@ -9,6 +9,7 @@ import android.speech.RecognitionListener
 import android.speech.SpeechRecognizer
 import com.baidu.speech.VoiceRecognitionService
 import com.orhanobut.logger.Logger
+import org.intellij.lang.annotations.Language
 import org.json.JSONException
 import org.json.JSONArray
 import org.json.JSONObject
@@ -20,6 +21,11 @@ import org.json.JSONObject
  * Created by chenlei2 on 2017/5/25 0025.
  */
 class AsrManager : RecognitionListener {
+
+    companion object{
+        val LANGULAGE_CN="cmn-Hans-CN"
+        val LANGULAGE_EN = "en-GB"
+    }
 
     var speechRecognizer: SpeechRecognizer? = null
 
@@ -92,9 +98,16 @@ class AsrManager : RecognitionListener {
     fun startAsrDialog(activity: BaseActivity,requestCode: Int){
         val intent =  Intent("com.baidu.action.RECOGNIZE_SPEECH")
         bindParams(intent)
+        intent.putExtra("language","en-GB")
         activity.startActivityForResult(intent,requestCode)
     }
 
+    fun startAsrDialog(activity: BaseActivity,requestCode: Int,language: String){
+        val intent =  Intent("com.baidu.action.RECOGNIZE_SPEECH")
+        bindParams(intent)
+        intent.putExtra("language",language)
+        activity.startActivityForResult(intent,requestCode)
+    }
 
     override fun onReadyForSpeech(params: Bundle?) {
         Logger.d("readyForSpeech")

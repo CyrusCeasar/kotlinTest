@@ -27,27 +27,74 @@
         android:layout_weight="1">
 
     </android.support.v7.widget.RecyclerView>
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
         android:background="@drawable/bord_bottom"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/et_content"
-            android:layout_width="wrap_content"
-            android:layout_weight="1"
-            android:hint="please input content"
-            android:textColor="@color/black"
-            android:textColorHint="@color/gray"
-            android:layout_height="match_parent" />
-        <Button
-            android:id="@+id/btn_send"
-            android:layout_width="60dp"
-            android:layout_height="40dp"
-            android:padding="5dp"
-            android:background="#5ebef9"
-            android:text="send"/>
-    </LinearLayout>
+        android:layout_height="50dp">
+        <LinearLayout
+            android:id="@+id/ll_keyboard_input_window"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+
+            android:visibility="visible"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/img_voice_input"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/ic_voice"/>
+            <EditText
+                android:id="@+id/et_content"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:hint="please input content"
+                android:textColor="@color/black"
+                android:textColorHint="@color/gray"
+                android:layout_height="match_parent" />
+            <Button
+                android:id="@+id/btn_send"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:padding="5dp"
+                android:background="#5ebef9"
+                android:text="send"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_voice_input_window"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:visibility="invisible"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/img_keyboard"
+                android:layout_width="37dp"
+                android:layout_height="37dp"
+                android:src="@mipmap/ic_keyboard"/>
+            <Button
+                android:id="@+id/tv_eng_voice_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="English"/>
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/gray"/>
+            <Button
+                android:id="@+id/tv_chinese_voice_input"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:text="中文"/>
+
+        </LinearLayout>
+    </FrameLayout>
+
 
 </LinearLayout>

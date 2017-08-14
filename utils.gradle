@@ -1,0 +1,71 @@
+import groovy.util.XmlSlurper
+
+//解析XML时候要引入这个groovy的package
+
+def copyFile(String srcFile, dstFile) {
+}
+
+def rmFile(String targetFile) {
+}
+
+def cleanOutput(boolean bJar = true) {
+}
+
+def copyOutput(boolean bJar = true) {
+}
+
+def getVersionNameAdvanced() {//老朋友
+    def xmlFile = project.file("\\src\\main\\AndroidManifest.xml")
+    def rootManifest = new XmlSlurper().parse(xmlFile)
+    return rootManifest['@android:versionName']
+}
+
+//对于android library编译，我会disable所有的debug编译任务
+def disableDebugBuild() {
+    //project.tasks包含了所有的tasks，下面的findAll是寻找那些名字中带debug的Task。
+    //返回值保存到targetTasks容器中
+    def targetTasks = project.tasks.findAll { task ->
+        task.name.contains("Debug")
+    }
+    //对满足条件的task，设置它为disable。如此这般，这个Task就不会被执行
+    targetTasks.each {
+        println "disable debug task  :${it.name}"
+        it.setEnabled false
+    }
+}
+def getReleasePassword(){
+    def password = ''
+    if(rootProject.file('private.properties').exists()){
+        Properties properties = new Properties()
+        properties.load(rootProject.file('private.properties').newDataInputStream())
+        password = properties.getProperty('releasePassword')
+    }
+    if(!password?.trim()){
+        password = new String(System.console().readPassword("\nWhat's the secret password"))
+    }
+    password
+}
+def getGitVersion() {
+    return 'git rev-parse --short HEAD'.execute().text.trim()
+}
+def releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
+}
+/*def getSvnRevision() {
+    ISVNOptions options = SVNWCUtil.createDefaultOptions(true)
+    SVNClientManager clientManager = SVNClientManager.newInstance(options)
+    SVNStatusClient statusClient = clientManager.getStatusClient()
+    SVNStatus status = statusClient.doStatus(projectDir, false)
+    SVNRevision revision = status.getCommittedRevision()
+    return revision.getNumber()
+}*/
+//将函数设置为extra属性中去，这样，加载utils.gradle的Project就能调用此文件中定义的函数了
+ext {
+    copyFile = this.&copyFile
+    rmFile = this.&rmFile
+    cleanOutput = this.&cleanOutput
+    copyOutput = this.&copyOutput
+    getVersionNameAdvanced = this.&getVersionNameAdvanced
+    disableDebugBuild = this.&disableDebugBuild
+    getReleasePassword = this.&getReleasePassword
+}

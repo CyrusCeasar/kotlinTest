@@ -1,4 +1,4 @@
-package cn.sz.cyrus.wemz
+package cn.sz.cyrus.lili
 
 import android.support.v7.app.AppCompatActivity
 import android.view.View

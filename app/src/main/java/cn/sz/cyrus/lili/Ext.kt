@@ -1,4 +1,4 @@
-package cn.sz.cyrus.wemz
+package cn.sz.cyrus.lili
 
 import android.widget.Toast
 import es.dmoral.toasty.Toasty

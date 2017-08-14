@@ -1,4 +1,4 @@
-package cn.sz.cyrus.wemz
+package cn.sz.cyrus.lili
 
 import android.content.Intent
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package cn.sz.cyrus.wemz
+package cn.sz.cyrus.lili
 
 
 import android.app.Activity
@@ -10,15 +10,12 @@ import android.support.v7.widget.RecyclerView.Adapter
 import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import com.orhanobut.logger.Logger
-import com.turing.androidsdk.HttpRequestListener
-import com.turing.androidsdk.TuringManager
 import android.speech.SpeechRecognizer
+import android.widget.*
 import com.transitionseverywhere.ChangeText
 import com.transitionseverywhere.TransitionManager
+import kotlin.experimental.and
 
 
 /**
@@ -29,12 +26,15 @@ class ChatActivity : BaseActivity() {
     var btn_send: Button? = null
     var et_content: EditText? = null
     var rv_contents: RecyclerView? = null
-    var turingManager: TuringManager? = null
+
+    var img_voice_input: ImageView? = null
+    var img_keyboard: ImageView? = null
+    var ll_voice_input_window: LinearLayout? = null
+    var ll_keyboard_input_window: LinearLayout? = null
+    var tv_chinese_voice_input: Button? = null
+    var tv_eng_voice_input: Button? = null
 
     val chatMsgDao = TestApplication.appDataBase!!.getChatMsgDao()
-
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,27 +45,46 @@ class ChatActivity : BaseActivity() {
         btn_send = findViewById(R.id.btn_send) as Button
         et_content = findViewById(R.id.et_content) as EditText
         rv_contents = findViewById(R.id.rv_contents) as RecyclerView
-        turingManager = TuringManager(this, "4845d979e70d4f6bad9c790d342f8c02", "9ad19814c79a12a9")
-        turingManager!!.setHttpRequestListener(object : HttpRequestListener {
-            override fun onFail(p0: Int, p1: String?) {
-                toastError("result_code:$p0  result_msg:$p1")
-            }
 
-            override fun onSuccess(p0: String?) {
-          //      p0?.let { contents.add(ChatItem(p0,ChatItem.TYPE.ROBOT)) }
-                rv_contents!!.adapter.notifyItemInserted(TestApplication.INSTANCE.getHistorySize())
+        tv_eng_voice_input = findViewById(R.id.tv_eng_voice_input) as Button
+        tv_chinese_voice_input = findViewById(R.id.tv_chinese_voice_input) as Button
+        ll_keyboard_input_window = findViewById(R.id.ll_keyboard_input_window) as LinearLayout
+        ll_voice_input_window = findViewById(R.id.ll_voice_input_window) as LinearLayout
+        img_keyboard = findViewById(R.id.img_keyboard) as ImageView
+        img_voice_input = findViewById(R.id.img_voice_input) as ImageView
 
-                Logger.d(p0)
-            }
+        img_keyboard!!.setOnClickListener {
+            ll_voice_input_window!!.visibility = View.INVISIBLE
+            ll_keyboard_input_window!!.visibility = View.VISIBLE
+        }
+        img_voice_input!!.setOnClickListener {
+            ll_voice_input_window!!.visibility = View.VISIBLE
+            ll_keyboard_input_window!!.visibility = View.INVISIBLE
+        }
+        tv_eng_voice_input!!.setOnClickListener { TestApplication.asrManager.startAsrDialog(this, REQUEST_EN_UI, AsrManager.LANGULAGE_EN) }
+        tv_chinese_voice_input!!.setOnClickListener { TestApplication.asrManager.startAsrDialog(this, REQUEST_CN_UI, AsrManager.LANGULAGE_CN) }
 
-        })
+        /* turingManager = TuringManager(this, "4845d979e70d4f6bad9c790d342f8c02", "9ad19814c79a12a9")
+         turingManager!!.setHttpRequestListener(object : HttpRequestListener {
+             override fun onFail(p0: Int, p1: String?) {
+                 toastError("result_code:$p0  result_msg:$p1")
+             }
+
+             override fun onSuccess(p0: String?) {
+           //      p0?.let { contents.add(ChatItem(p0,ChatItem.TYPE.ROBOT)) }
+                 rv_contents!!.adapter.notifyItemInserted(TestApplication.INSTANCE.getHistorySize())
+
+                 Logger.d(p0)
+             }
+
+         })*/
         btn_send!!.setOnClickListener {
             if (TextUtils.isEmpty(et_content!!.text.toString())) {
                 toastError("输入内容不能为空")
             } else {
-       //         contents.add(ChatItem(et_content!!.text.toString(),ChatItem.TYPE.MASTER))
+                //         contents.add(ChatItem(et_content!!.text.toString(),ChatItem.TYPE.MASTER))
 
-                if(TestApplication.robotCenter!!.robotService.storeMsg(ChatMsg(et_content!!.text.toString(),ChatMsg.TO.ROBOT))){
+          /*      if (TestApplication.robotCenter!!.robotService.storeMsg(ChatMsg(et_content!!.text.toString(), ChatMsg.TO.ROBOT))) {
                     rv_contents!!.adapter.notifyItemInserted(TestApplication.INSTANCE.getHistorySize())
                     rv_contents!!.scrollToPosition(TestApplication.INSTANCE.getHistorySize())
                 }
@@ -73,25 +92,29 @@ class ChatActivity : BaseActivity() {
                     reponse ->
                     rv_contents!!.adapter.notifyItemInserted(TestApplication.INSTANCE.getHistorySize())
                     rv_contents!!.scrollToPosition(TestApplication.INSTANCE.getHistorySize())
-                })
+                })*/
+                val msg = et_content!!.text.toString()
+                if(isChinese(msg)){
+                    speakChinese(msg)
+                }else{
+                    TestApplication.robotCenter!!.robotService.storeMsg(ChatMsg(msg, ChatMsg.ROBOT))
+                    TestApplication.robotCenter!!.robotService.chat(msg)
+                }
                 et_content!!.setText("")
             }
         }
 
-        btn_send!!.setOnLongClickListener{
-            TestApplication.asrManager.startAsrDialog(this,REQUEST_UI)
-            true
-        }
+
 
         rv_contents!!.layoutManager = LinearLayoutManager(this)
         rv_contents!!.adapter = object : Adapter<ChatItemHolder>() {
             override fun onBindViewHolder(p0: ChatItemHolder?, p1: Int) {
-                val chatMsg:ChatMsg = TestApplication.INSTANCE.getChatMsg(p1)
+                val chatMsg: ChatMsg = TestApplication.INSTANCE.getChatMsg(p1)
                 p0?.tv_content?.text = chatMsg.msg
 
                 p0?.tv_content?.setOnLongClickListener {
                     TestApplication.robotCenter!!.speak(chatMsg.msg)
-                     true
+                    true
                 }
                 p0?.tv_content?.setOnClickListener {
                     val transitionsContainer = p0?.tv_content?.parent
@@ -116,13 +139,13 @@ class ChatActivity : BaseActivity() {
                         }
                     }
                 }
-             }
+            }
 
             override fun onCreateViewHolder(p0: ViewGroup?, p1: Int): ChatItemHolder {
-             return  when(p1){
-                    ChatMsg.TO.ROBOT->   ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_master, null))
-                    ChatMsg.TO.MASTER->     ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_robot, null))
-                    else ->   ChatItemHolder(layoutInflater.inflate(R.layout.item_chat, null))
+                return when (p1) {
+                    ChatMsg.TO.ROBOT -> ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_master, null))
+                    ChatMsg.TO.MASTER -> ChatItemHolder(layoutInflater.inflate(R.layout.item_chat_robot, null))
+                    else -> ChatItemHolder(layoutInflater.inflate(R.layout.item_chat, null))
                 }
             }
 
@@ -131,22 +154,22 @@ class ChatActivity : BaseActivity() {
             }
 
             override fun getItemViewType(position: Int): Int {
-                return  TestApplication.INSTANCE.getChatMsg(position).to
+                return TestApplication.INSTANCE.getChatMsg(position).to
             }
         }
         TestApplication.robotCenter!!.robotService.getPrompt()
 
     }
+
     val msgChangeListener = {
         rv_contents!!.adapter.notifyItemInserted(TestApplication.INSTANCE.getHistorySize())
-        rv_contents!!.scrollToPosition(rv_contents!!.adapter.itemCount-1)
+        rv_contents!!.scrollToPosition(rv_contents!!.adapter.itemCount - 1)
     }
 
     override fun onStart() {
         super.onStart()
-        TestApplication.INSTANCE.addMsgChangeListener (msgChangeListener)
+        TestApplication.INSTANCE.addMsgChangeListener(msgChangeListener)
     }
-
 
 
     override fun onStop() {
@@ -156,24 +179,27 @@ class ChatActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        rv_contents!!.scrollToPosition(rv_contents!!.adapter.itemCount-1)
+        rv_contents!!.scrollToPosition(rv_contents!!.adapter.itemCount - 1)
+
     }
 
-   /* class ChatItem(content:String,type:Int){
-        object TYPE{
-            val MASTER = 0
-            val ROBOT = 1
-        }
-        val content:String = content
-        val type:Int = type
-        var trsResult:String ?= null
-    }*/
+    /* class ChatItem(content:String,type:Int){
+         object TYPE{
+             val MASTER = 0
+             val ROBOT = 1
+         }
+         val content:String = content
+         val type:Int = type
+         var trsResult:String ?= null
+     }*/
 
     class ChatItemHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         var tv_content: TextView? = itemView!!.findViewById(R.id.tv_content) as TextView
     }
 
-    private val REQUEST_UI = 1
+    val REQUEST_EN_UI = 1
+
+    val REQUEST_CN_UI = 2
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -181,15 +207,47 @@ class ChatActivity : BaseActivity() {
         if (resultCode == Activity.RESULT_OK) {
             val results = data.getStringArrayListExtra(SpeechRecognizer.RESULTS_RECOGNITION)
             Logger.i(results.toString())
-            if(results.size > 0){
+            if (results.size > 0) {
                 var msg = results[0]
-                if(msg.contains(",")){
-                     msg = msg.substring(0,msg.indexOf(","))
+                if (msg.contains(",")) {
+                    msg = msg.substring(0, msg.indexOf(","))
                 }
-                TestApplication.robotCenter!!.robotService.storeMsg(ChatMsg(msg,ChatMsg.ROBOT))
-                TestApplication.robotCenter!!.robotService.chat(msg)
+                when (requestCode) {
+                    REQUEST_EN_UI -> {
+                        TestApplication.robotCenter!!.robotService.storeMsg(ChatMsg(msg, ChatMsg.ROBOT))
+                        TestApplication.robotCenter!!.robotService.chat(msg)
+                    }
+                    REQUEST_CN_UI -> {
+                        speakChinese(msg)
+                    }
+                }
+                // data.get... TODO 识别结果包含的信息见本文档的“结果解析”一节
             }
-            // data.get... TODO 识别结果包含的信息见本文档的“结果解析”一节
         }
+    }
+    fun speakChinese(msg:String){
+        TranslateService().translate(TranslateService.vals.CN, TranslateService.vals.EN,msg, {
+            result ->
+            var chatMsg = ChatMsg(result,ChatMsg.ROBOT)
+            chatMsg.translMsg = msg
+            TestApplication.robotCenter!!.robotService.storeMsg(chatMsg)
+            TestApplication.robotCenter!!.robotService.chat(result)
+        })
+    }
+
+    // 判断一个字符是否是中文
+    fun isChinese(c: Char): Boolean {
+        return c.toInt() >= 0x4E00 && c.toInt() <= 0x9FA5// 根据字节码判断
+    }
+
+    // 判断一个字符串是否含有中文
+    fun isChinese(str: String?): Boolean {
+        if (str == null)
+            return false
+        for (c in str.toCharArray()) {
+            if (isChinese(c))
+                return true// 有一个中文字符就返回
+        }
+        return false
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cn.sz.cyrus.wemz">
+    package="cn.sz.cyrus.lili">
     <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,15 +15,16 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_new"
-        android:name="cn.sz.cyrus.wemz.TestApplication"
+        android:name="cn.sz.cyrus.lili.TestApplication"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="cn.sz.cyrus.wemz.ChatActivity"
+            android:name="cn.sz.cyrus.lili.ChatActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="portrait"
+        android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +44,7 @@
             </intent-filter>
         </activity>
     <!--    <activity android:name="cn.sz.cyrus.wemz.ChatActivity"/>-->
-        <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" />
+      <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" />
         <!-- begin: baidu speech sdk-->
         <!-- 请填写应用实际的APP_ID -->
         <meta-data android:name="com.baidu.speech.APP_ID" android:value="9688537"/>

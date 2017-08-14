@@ -1,1 +1,12 @@
+def initMinshengGradleEnvironment(){
+    println"initialize Minsheng Gradle Environment ....."
+    println"initialize Minsheng Gradle Environment completes..."
+}
+//settings.gradle加载的时候，会执行initMinshengGradleEnvironment
+initMinshengGradleEnvironment()
+//在settings.gradle中，则输出"In settings,gradle id is"
+println "In posdevice, gradle id is " +gradle.hashCode()
+println "Home Dir:" + gradle.gradleHomeDir
+println "User Home Dir:" + gradle.gradleUserHomeDir
+println "Parent: " + gradle.parent
 include ':app', ':library'

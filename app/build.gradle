@@ -1,9 +1,20 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply from: rootProject.getRootDir().getAbsolutePath() + "\\utils.gradle"
 kapt {
     generateStubs = true
 }
+println "versionName:"+getVersionNameAdvanced()
 android {
+    signingConfigs{
+        myconfig{
+            keyAlias 'android.keystore'
+            keyPassword getReleasePassword()
+            storeFile file('F:/sign/android.keystore')
+            storePassword getReleasePassword()
+        }
+    }
+
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -26,15 +37,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.myconfig
+        }
+        debug{
+            signingConfig signingConfigs.myconfig
         }
     }
-  /*      packagingOptions {
-            exclude 'META-INF/LICENSE.txt'
-            exclude 'META-INF/LICENSE'
-            exclude 'META-INF/NOTICE'
-            exclude 'META-INF/NOTICE.txt'
-            exclude 'LICENSE.txt'
-        }*/
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            output.outputFileName =    output.outputFileName.replace(".apk","-${defaultConfig.versionName}.apk")
+        }
+    }
 }
 
 

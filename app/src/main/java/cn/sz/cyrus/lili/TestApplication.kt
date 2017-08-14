@@ -1,4 +1,4 @@
-package cn.sz.cyrus.wemz
+package cn.sz.cyrus.lili
 
 import android.app.Application
 import android.content.Context
@@ -89,10 +89,9 @@ class TestApplication : Application() {
             val robotService = RobotService()
             robotService.storeMsg(ChatMsg("Hello,I am lili . Nice to meet you! Click this message Or long click. You will be surprised . If you tired of sending message to me , say 'Hello,LiLi' to me .", ChatMsg.TO.MASTER))
         }
+        asrManager.init(this@TestApplication)
         robotCenter = RobotCenter(this@TestApplication)
-        Thread{
-            asrManager.init(this@TestApplication)
-        }
+
     }
 
 

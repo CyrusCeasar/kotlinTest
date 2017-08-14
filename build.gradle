@@ -9,18 +9,19 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha4'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha7'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.letv.sarrsdesktop:BlockCanaryExPlugin:0.9.9.2'
+//        classpath 'com.letv.sarrsdesktop:BlockCanaryExPlugin:0.9.9.2'
+//        classpath group: 'org.tmatesoft.svnkit', name: 'svnkit', version: '1.8.11'
         // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
+
+
 }
 
 allprojects {
     repositories {
         jcenter()
-
         maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }
         mavenCentral()
